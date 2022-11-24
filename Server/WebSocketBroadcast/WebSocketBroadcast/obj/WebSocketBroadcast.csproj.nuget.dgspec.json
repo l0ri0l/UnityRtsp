@@ -1,17 +1,17 @@
 {
   "format": 1,
   "restore": {
-    "E:\\Projects\\Server\\WebSocketBroadcast\\WebSocketBroadcast\\WebSocketBroadcast.csproj": {}
+    "E:\\Projects\\UnityRtsp\\Server\\WebSocketBroadcast\\WebSocketBroadcast\\WebSocketBroadcast.csproj": {}
   },
   "projects": {
-    "E:\\Projects\\Server\\WebSocketBroadcast\\WebSocketBroadcast\\WebSocketBroadcast.csproj": {
+    "E:\\Projects\\UnityRtsp\\Server\\WebSocketBroadcast\\WebSocketBroadcast\\WebSocketBroadcast.csproj": {
       "version": "1.0.0",
       "restore": {
-        "projectUniqueName": "E:\\Projects\\Server\\WebSocketBroadcast\\WebSocketBroadcast\\WebSocketBroadcast.csproj",
+        "projectUniqueName": "E:\\Projects\\UnityRtsp\\Server\\WebSocketBroadcast\\WebSocketBroadcast\\WebSocketBroadcast.csproj",
         "projectName": "WebSocketBroadcast",
-        "projectPath": "E:\\Projects\\Server\\WebSocketBroadcast\\WebSocketBroadcast\\WebSocketBroadcast.csproj",
+        "projectPath": "E:\\Projects\\UnityRtsp\\Server\\WebSocketBroadcast\\WebSocketBroadcast\\WebSocketBroadcast.csproj",
         "packagesPath": "C:\\Users\\Administrator\\.nuget\\packages\\",
-        "outputPath": "E:\\Projects\\Server\\WebSocketBroadcast\\WebSocketBroadcast\\obj\\",
+        "outputPath": "E:\\Projects\\UnityRtsp\\Server\\WebSocketBroadcast\\WebSocketBroadcast\\obj\\",
         "projectStyle": "PackageReference",
         "fallbackFolders": [
           "C:\\Program Files\\dotnet\\sdk\\NuGetFallbackFolder"
@@ -44,6 +44,10 @@
               "target": "Package",
               "version": "[2.1.0, )",
               "autoReferenced": true
+            },
+            "System.Text.Json": {
+              "target": "Package",
+              "version": "[5.0.2, )"
             },
             "WebSocketSharp-NonPreRelease": {
               "target": "Package",
