@@ -1,0 +1,11 @@
+E:\Projects\UnityRtsp\Server\WebSocketBroadcast\WebSocketBroadcast\bin\Debug\netcoreapp2.1\WebSocketBroadcast.deps.json
+E:\Projects\UnityRtsp\Server\WebSocketBroadcast\WebSocketBroadcast\bin\Debug\netcoreapp2.1\WebSocketBroadcast.runtimeconfig.json
+E:\Projects\UnityRtsp\Server\WebSocketBroadcast\WebSocketBroadcast\bin\Debug\netcoreapp2.1\WebSocketBroadcast.runtimeconfig.dev.json
+E:\Projects\UnityRtsp\Server\WebSocketBroadcast\WebSocketBroadcast\bin\Debug\netcoreapp2.1\WebSocketBroadcast.dll
+E:\Projects\UnityRtsp\Server\WebSocketBroadcast\WebSocketBroadcast\bin\Debug\netcoreapp2.1\WebSocketBroadcast.pdb
+E:\Projects\UnityRtsp\Server\WebSocketBroadcast\WebSocketBroadcast\obj\Debug\netcoreapp2.1\WebSocketBroadcast.csprojAssemblyReference.cache
+E:\Projects\UnityRtsp\Server\WebSocketBroadcast\WebSocketBroadcast\obj\Debug\netcoreapp2.1\WebSocketBroadcast.csproj.CoreCompileInputs.cache
+E:\Projects\UnityRtsp\Server\WebSocketBroadcast\WebSocketBroadcast\obj\Debug\netcoreapp2.1\WebSocketBroadcast.AssemblyInfoInputs.cache
+E:\Projects\UnityRtsp\Server\WebSocketBroadcast\WebSocketBroadcast\obj\Debug\netcoreapp2.1\WebSocketBroadcast.AssemblyInfo.cs
+E:\Projects\UnityRtsp\Server\WebSocketBroadcast\WebSocketBroadcast\obj\Debug\netcoreapp2.1\WebSocketBroadcast.dll
+E:\Projects\UnityRtsp\Server\WebSocketBroadcast\WebSocketBroadcast\obj\Debug\netcoreapp2.1\WebSocketBroadcast.pdb
