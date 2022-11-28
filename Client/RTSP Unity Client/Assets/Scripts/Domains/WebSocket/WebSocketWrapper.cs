@@ -78,7 +78,25 @@ public class WebSocketWrapper
         _onMessage = onMessage;
         return this;
     }
+    
+    public WebSocketWrapper AddOnMessage(Action<string, WebSocketWrapper> newOnMessage)
+    {
+        _onMessage += newOnMessage;
+        return this;
+    }
+    
+    public WebSocketWrapper AddOnConnect(Action<WebSocketWrapper> newOnConnect)
+    {
+        _onConnected += newOnConnect;
+        return this;
+    }
 
+    public WebSocketWrapper AddOnDisconnect(Action<WebSocketWrapper> newOnDisconnect)
+    {
+        _onConnected += newOnDisconnect;
+        return this;
+    }
+    
     /// <summary>
     ///     Send a message to the WebSocket server.
     /// </summary>
@@ -177,10 +195,6 @@ public class WebSocketWrapper
 
     private static void RunInTask(Action action)
     {
-        Task task = new Task(() =>
-        {
-            action.Invoke();
-        });
-        task.Start(TaskScheduler.FromCurrentSynchronizationContext());
+        Task.Factory.StartNew(action);
     }
 }

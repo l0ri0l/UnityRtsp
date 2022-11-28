@@ -6,12 +6,16 @@ public class OdometerWheelViewModel : MonoBehaviour
     public OdometerWheelValueViewModel NextElementTemplate;
     public OdometerWheelValueViewModel CurrentElement;
     public bool isChangeable;
-    
-    [HideInInspector] public string nextSymbol ="0";
-    
-    
+
     private string _currentSymbol = "0";
-    
+    private string _nextSymbol = "0";
+
+    public string NextSymbol
+    {
+        get => _nextSymbol;
+        set => _nextSymbol = value;
+    }
+
     private void ChangeElement(string digit)
     {
         if (digit != CurrentElement.DigitValue.text)
@@ -40,10 +44,10 @@ public class OdometerWheelViewModel : MonoBehaviour
     void Update()
     {
         // we got web socket message not from main thread and need to return to the main to instantiate new objects
-        if ((_currentSymbol != nextSymbol) && isChangeable)
+        if ((_currentSymbol != NextSymbol) && isChangeable)
         {
-            _currentSymbol = nextSymbol;
-            ChangeElement(nextSymbol);
+            _currentSymbol = NextSymbol;
+            ChangeElement(NextSymbol);
         }
     }
 }

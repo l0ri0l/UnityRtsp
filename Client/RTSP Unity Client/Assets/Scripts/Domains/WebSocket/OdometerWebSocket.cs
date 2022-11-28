@@ -1,7 +1,10 @@
 using System;
 using System.Threading.Tasks;
+using Arwel.EventBus;
 using RtspTest.Domains.Odometer;
+using Unity.VisualScripting;
 using UnityEngine;
+using UnityEngine.UIElements;
 
 public class OdometerWebSocketRequest
 {
@@ -29,12 +32,14 @@ public class OdometerWebSocket : MonoBehaviour
         bool nextStatus = from.status;
         float nextOdometer = from.odometer;
         
+        Debug.Log($"Status: {from.status}; Value: {from.odometer}");
+        
         if (from.status)
         {
             // Простите, но иногда в теле ответа приходит не то, что вы заявляли в ТЗ. Иногда при status = true не приходит odometer, а иногда при status = false у odometer появляется значение. (см скриншоты из Postman)
-            if (from.odometer != 0f)
+            if (from.odometer == 0f)
             {
-                nextOdometer = from.odometer;
+                nextStatus = false;
             }
 
             to.UpdateValues(nextStatus, nextOdometer);
@@ -49,6 +54,9 @@ public class OdometerWebSocket : MonoBehaviour
     private const string connection = "ws://185.246.65.199:9090/ws";
 
     private Action<string, WebSocketWrapper> onMessage;
+    private Action<WebSocketWrapper> onConnected;
+    private Action<WebSocketWrapper> onDisconnected;
+    
     private WebSocketWrapper wsClient;
     private readonly OdometerData _odometerData = new();
 
@@ -60,7 +68,7 @@ public class OdometerWebSocket : MonoBehaviour
         
         wsClient = WebSocketWrapper.Create(connection);
 
-        onMessage += (message, wrapper) =>
+        onMessage += (message, _) =>
         {
             Debug.Log("Message!");
             var operationResult = JsonUtility.FromJson<OdometerOperationResult>(message);
@@ -68,18 +76,22 @@ public class OdometerWebSocket : MonoBehaviour
             OdometerUpdater.UpdateValue(operationResult, _odometerData);
         };
 
+        onConnected += (_) =>
+        {
+            EventBus<OdometerConnectionEvent>.Raise(new OdometerConnectionEvent(true));
+        };
+
+        onDisconnected += async (_) =>
+        {
+            EventBus<OdometerConnectionEvent>.Raise(new OdometerConnectionEvent(false));
+            await Task.Delay(10000);
+            wsClient.Connect();
+        };
+
+        wsClient.OnConnect(onConnected);
         wsClient.OnMessage(onMessage);
 
         wsClient.Connect();
-    }
-
-    public async Task OnMessage(string message)
-    {
-        Debug.Log("Message!");
-        var operationResult = JsonUtility.FromJson<OdometerOperationResult>(message);
-            
-        OdometerUpdater.UpdateValue(operationResult, _odometerData);
-        await Task.CompletedTask;
     }
     
     public void SendMessage(string messageToSend)
