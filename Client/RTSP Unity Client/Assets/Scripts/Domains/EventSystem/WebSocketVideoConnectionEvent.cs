@@ -1,21 +1,22 @@
-using Arwel.EventBus;
-
-public class WebSocketVideoConnectionEvent : IEvent
+namespace Arwel.Scripts.Domains.EventBus
 {
-    public bool isConnected;
-
-    public WebSocketVideoConnectionEvent(bool isConnected)
+    public class WebSocketVideoConnectionEvent : IEvent
     {
-        this.isConnected = isConnected;
+        public bool isConnected;
+
+        public WebSocketVideoConnectionEvent(bool isConnected)
+        {
+            this.isConnected = isConnected;
+        }
     }
-}
 
-public class ChangeVideoAddress : IEvent
-{
-    public string path;
-
-    public ChangeVideoAddress(string path)
+    public class ChangeVideoAddress : IEvent
     {
-        this.path = path;
+        public string path;
+
+        public ChangeVideoAddress(string path)
+        {
+            this.path = path;
+        }
     }
 }

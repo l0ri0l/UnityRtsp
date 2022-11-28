@@ -1,7 +1,7 @@
 using System;
 using System.Collections.Generic;
 
-namespace RtspTest.Domains.Odometer
+namespace Arwel.Scripts.Odometer
 {
     public static class OdometerUpdater
     {

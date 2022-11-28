@@ -1,53 +1,56 @@
 using DG.Tweening;
 using UnityEngine;
 
-public class OdometerWheelViewModel : MonoBehaviour
+namespace Arwel.Scripts.UI
 {
-    public OdometerWheelValueViewModel NextElementTemplate;
-    public OdometerWheelValueViewModel CurrentElement;
-    public bool isChangeable;
-
-    private string _currentSymbol = "0";
-    private string _nextSymbol = "0";
-
-    public string NextSymbol
+    public class OdometerWheelViewModel : MonoBehaviour
     {
-        get => _nextSymbol;
-        set => _nextSymbol = value;
-    }
+        public OdometerWheelValueViewModel NextElementTemplate;
+        public OdometerWheelValueViewModel CurrentElement;
+        public bool isChangeable;
 
-    private void ChangeElement(string digit)
-    {
-        if (digit != CurrentElement.DigitValue.text)
+        private string _currentSymbol = "0";
+        private string _nextSymbol = "0";
+
+        public string NextSymbol
         {
-            var nextElement = Instantiate(NextElementTemplate, transform);
-            
-            var nextElementRect = nextElement.GetComponent<RectTransform>();
-            
-            nextElementRect.anchoredPosition = new Vector2(0, 25f);
-            nextElement.DigitValue.SetText(digit);
-
-            var currenRect = CurrentElement.transform.GetComponent<RectTransform>();
-
-
-            currenRect.DOLocalMoveY(-25f, 0.5f);
-            nextElementRect.DOLocalMoveY(0f, 0.5f)
-              .OnComplete(() =>
-              {
-                  Destroy(CurrentElement.gameObject);
-
-                  CurrentElement = nextElement;
-              });
+            get => _nextSymbol;
+            set => _nextSymbol = value;
         }
-    }
 
-    void Update()
-    {
-        // we got web socket message not from main thread and need to return to the main to instantiate new objects
-        if ((_currentSymbol != NextSymbol) && isChangeable)
+        private void ChangeElement(string digit)
         {
-            _currentSymbol = NextSymbol;
-            ChangeElement(NextSymbol);
+            if (digit != CurrentElement.DigitValue.text)
+            {
+                var nextElement = Instantiate(NextElementTemplate, transform);
+
+                var nextElementRect = nextElement.GetComponent<RectTransform>();
+
+                nextElementRect.anchoredPosition = new Vector2(0, 25f);
+                nextElement.DigitValue.SetText(digit);
+
+                var currenRect = CurrentElement.transform.GetComponent<RectTransform>();
+
+
+                currenRect.DOLocalMoveY(-25f, 0.5f);
+                nextElementRect.DOLocalMoveY(0f, 0.5f)
+                    .OnComplete(() =>
+                    {
+                        Destroy(CurrentElement.gameObject);
+
+                        CurrentElement = nextElement;
+                    });
+            }
+        }
+
+        void Update()
+        {
+            // we got web socket message not from main thread and need to return to the main to instantiate new objects
+            if ((_currentSymbol != NextSymbol) && isChangeable)
+            {
+                _currentSymbol = NextSymbol;
+                ChangeElement(NextSymbol);
+            }
         }
     }
 }

@@ -1,48 +1,49 @@
-using System;
-using Arwel.EventBus;
 using UnityEngine;
 using UnityEngine.Audio;
 
-public class AudioController : MonoBehaviour
+namespace Arwel.Scripts.Domains
 {
-    public AudioMixer musicMixer;
-    private float _currentValue;
-    
-    public void SetLevel(float value)
+    public class AudioController : MonoBehaviour
     {
-        musicMixer.SetFloat("MusicVolume", Mathf.Log10(value) * 20);
-        musicMixer.SetFloat("SoundVolume", Mathf.Log10(value) * 20);
-        _currentValue = value;
-    }
+        public AudioMixer musicMixer;
+        private float _currentValue;
 
-    public void SetSound(bool isOn)
-    {
-        Debug.Log("sound to");
-        Debug.Log(isOn);
-        Debug.Log(musicMixer);
-        
-        if (!isOn)
+        public void SetLevel(float value)
         {
-            musicMixer.SetFloat("SoundVolume", Mathf.Log10(0.0001f) * 20);
+            musicMixer.SetFloat("MusicVolume", Mathf.Log10(value) * 20);
+            musicMixer.SetFloat("SoundVolume", Mathf.Log10(value) * 20);
+            _currentValue = value;
         }
-        else
+
+        public void SetSound(bool isOn)
         {
-            musicMixer.SetFloat("SoundVolume", Mathf.Log10(_currentValue) * 20);
+            Debug.Log("sound to");
+            Debug.Log(isOn);
+            Debug.Log(musicMixer);
+
+            if (!isOn)
+            {
+                musicMixer.SetFloat("SoundVolume", Mathf.Log10(0.0001f) * 20);
+            }
+            else
+            {
+                musicMixer.SetFloat("SoundVolume", Mathf.Log10(_currentValue) * 20);
+            }
         }
-    }
-    
-    public void SetMusic(bool isOn)
-    {
-        Debug.Log("Music to");
-        Debug.Log(isOn);
-        
-        if (!isOn)
+
+        public void SetMusic(bool isOn)
         {
-            musicMixer.SetFloat("MusicVolume", Mathf.Log10(0.0001f) * 20);
-        }
-        else
-        {
-            musicMixer.SetFloat("MusicVolume", Mathf.Log10(_currentValue) * 20);
+            Debug.Log("Music to");
+            Debug.Log(isOn);
+
+            if (!isOn)
+            {
+                musicMixer.SetFloat("MusicVolume", Mathf.Log10(0.0001f) * 20);
+            }
+            else
+            {
+                musicMixer.SetFloat("MusicVolume", Mathf.Log10(_currentValue) * 20);
+            }
         }
     }
 }

@@ -1,12 +1,15 @@
-using Arwel.EventBus;
+using Arwel.Scripts.Odometer;
 
-public class OdometerChangedEvent : IEvent
+namespace Arwel.Scripts.Domains.EventBus
 {
-    public OdometerData odometer;
-
-    public OdometerChangedEvent(OdometerData data)
+    public class OdometerChangedEvent : IEvent
     {
-        odometer = data;
+        public OdometerData odometer;
+
+        public OdometerChangedEvent(OdometerData data)
+        {
+            odometer = data;
+        }
+
     }
-    
 }

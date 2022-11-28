@@ -1,4 +1,4 @@
-namespace RtspTest.Domains.Odometer
+namespace Arwel.Scripts.Odometer
 {
     public class OdometerOperationResult
     {

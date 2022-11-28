@@ -1,18 +1,21 @@
-using Arwel.EventBus;
+using Arwel.Scripts.Domains.EventBus;
 
-public class OdometerData
+namespace Arwel.Scripts.Odometer
 {
-    public bool OdometerStatus;
-    public float OdometerValue;
-
-    public void UpdateValues(bool status, float value)
+    public class OdometerData
     {
-        OdometerStatus = status;
-        OdometerValue = value;
+        public bool OdometerStatus;
+        public float OdometerValue;
 
-        var odoEvent = new OdometerChangedEvent(this);
-        
-        EventBus<OdometerChangedEvent>.Raise(odoEvent);
+        public void UpdateValues(bool status, float value)
+        {
+            OdometerStatus = status;
+            OdometerValue = value;
 
+            var odoEvent = new OdometerChangedEvent(this);
+
+            EventBus<OdometerChangedEvent>.Raise(odoEvent);
+
+        }
     }
 }

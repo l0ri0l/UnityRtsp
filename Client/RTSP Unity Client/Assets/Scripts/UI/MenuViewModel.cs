@@ -1,89 +1,88 @@
-using Arwel.EventBus;
+using Arwel.Scripts.Domains;
 using DG.Tweening;
 using TMPro;
-using Unity.VisualScripting;
 using UnityEngine;
 using UnityEngine.UI;
 
-public static class VideoPath
+namespace Arwel.Scripts.UI
 {
-    public static string Server;
-    public static string Port;
-    public static string Video;
-}
-
-public class MenuViewModel : MonoBehaviour
-{
-    public GameObject MenuButtons;
-    public RectTransform ShowHideButtonRect;
-    public RectTransform MenuRect;
-
-    public Toggle SoundToggler;
-    public Toggle MusicToggler;
-    public TMP_InputField Address;
-    public TMP_InputField Port;
-    public TMP_InputField File;
-    public AudioController AudioController;
-
-    private bool isMenuVisible
+    public static class VideoPath
     {
-        get => MenuButtons.activeInHierarchy;
+        public static string Server;
+        public static string Port;
+        public static string Video;
     }
 
-    void Start()
+    public class MenuViewModel : MonoBehaviour
     {
-        Address.SetTextWithoutNotify(VideoPath.Server);
-        Port.SetTextWithoutNotify(VideoPath.Port);
-        File.SetTextWithoutNotify(VideoPath.Video);
-        
-        Debug.Log(Address.text);
-        Debug.Log(VideoPath.Server);
-    }
+        public GameObject MenuButtons;
+        public RectTransform ShowHideButtonRect;
+        public RectTransform MenuRect;
 
-    public void OnShowHideButtonClicked()
-    {
-        Debug.Log("Clicked Menu");
-        if (!isMenuVisible)
+        public Toggle SoundToggler;
+        public Toggle MusicToggler;
+        public TMP_InputField Address;
+        public TMP_InputField Port;
+        public TMP_InputField File;
+        public AudioController AudioController;
+
+        private bool isMenuVisible
         {
-            MenuButtons.SetActive(true);
-            MenuRect.DOLocalMoveX(MenuRect.rect.width, 1f);
-            ShowHideButtonRect.DORotate(new Vector3(0, 0, 0), 1f);
+            get => MenuButtons.activeInHierarchy;
         }
-        else
+
+        void Start()
         {
-            ShowHideButtonRect.DORotate(new Vector3(0, 180, 0), 1f);
-            MenuRect.DOLocalMoveX(0, 1f).OnComplete(() =>
+            Address.SetTextWithoutNotify(VideoPath.Server);
+            Port.SetTextWithoutNotify(VideoPath.Port);
+            File.SetTextWithoutNotify(VideoPath.Video);
+
+            Debug.Log(Address.text);
+            Debug.Log(VideoPath.Server);
+        }
+
+        public void OnShowHideButtonClicked()
+        {
+            Debug.Log("Clicked Menu");
+            if (!isMenuVisible)
             {
-                MenuButtons.SetActive(false);
-            });
+                MenuButtons.SetActive(true);
+                MenuRect.DOLocalMoveX(MenuRect.rect.width, 1f);
+                ShowHideButtonRect.DORotate(new Vector3(0, 0, 0), 1f);
+            }
+            else
+            {
+                ShowHideButtonRect.DORotate(new Vector3(0, 180, 0), 1f);
+                MenuRect.DOLocalMoveX(0, 1f).OnComplete(() => { MenuButtons.SetActive(false); });
+            }
         }
-    }
 
-    public void OnServerAddressSaveClicked()
-    {
-        VideoPath.Server = Address.text;
-        
-        Debug.Log(Address.text);
-        Debug.Log(VideoPath.Server);
-    }
-    
-    public void OnPortSaveClicked()
-    {
-        VideoPath.Port = Port.text;
-    }
+        public void OnServerAddressSaveClicked()
+        {
+            VideoPath.Server = Address.text;
 
-    public void OnFilepathSaveClicked()
-    {
-        VideoPath.Video = File.text;
-    }
+            Debug.Log(Address.text);
+            Debug.Log(VideoPath.Server);
+        }
 
-    public void OnToggleSound(bool isEnabled)
-    {
-        AudioController.SetSound(isEnabled);
-    }
+        public void OnPortSaveClicked()
+        {
+            VideoPath.Port = Port.text;
+        }
 
-    public void OnToggleMusic(bool isEnabled)
-    {
-        AudioController.SetMusic(isEnabled);
+        public void OnFilepathSaveClicked()
+        {
+            VideoPath.Video = File.text;
+        }
+
+        public void OnToggleSound(bool isEnabled)
+        {
+            AudioController.SetSound(isEnabled);
+        }
+
+        public void OnToggleMusic(bool isEnabled)
+        {
+            AudioController.SetMusic(isEnabled);
+        }
     }
 }

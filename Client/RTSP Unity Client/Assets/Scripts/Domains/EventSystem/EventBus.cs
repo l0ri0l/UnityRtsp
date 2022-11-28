@@ -1,6 +1,6 @@
 using System.Collections.Generic;
 
-namespace Arwel.EventBus
+namespace Arwel.Scripts.Domains.EventBus
 {
     public static class EventBus<T> where T : class, IEvent
     {

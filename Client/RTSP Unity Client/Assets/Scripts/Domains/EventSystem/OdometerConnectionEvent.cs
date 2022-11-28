@@ -1,11 +1,12 @@
-﻿using Arwel.EventBus;
-
-public class OdometerConnectionEvent : IEvent
+﻿namespace Arwel.Scripts.Domains.EventBus
 {
-    public bool isConnected;
-
-    public OdometerConnectionEvent(bool isConnected)
+    public class OdometerConnectionEvent : IEvent
     {
-        this.isConnected = isConnected;
+        public bool isConnected;
+
+        public OdometerConnectionEvent(bool isConnected)
+        {
+            this.isConnected = isConnected;
+        }
     }
 }
