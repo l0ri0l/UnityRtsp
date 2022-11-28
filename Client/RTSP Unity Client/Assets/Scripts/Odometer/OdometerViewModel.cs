@@ -1,77 +1,67 @@
 using System;
-using System.Collections;
-using System.Collections.Generic;
 using Arwel.EventBus;
-using RtspTest.Domains.Odometer;
 using UnityEngine;
-using UnityEngine.Serialization;
-using UnityEngine.UI;
 
 public class OdometerViewModel : MonoBehaviour, IEventSubscriber<OdometerChangedEvent>
 {
-    private const string ReceiveOdoByRequest = "currentOdometer";
-    private const string ReceiveOdoByTime = "odometer_val";
-    private const string ReceiveOdoStatusRand = "randomStatus";
+    private bool OdometerStatus { get; set; }
+    
+    [SerializeField]
+    private OdometerWebSocket odoWebSocketBeacon;
 
-    private void UpdateByRequest(OdometerOperationResult from, OdometerData to)
+    private float OdometerValue
     {
-        to.OdometerStatus = true;
-        to.OdometerValue = from.odometer;
-    }
-
-    private void UpdateByTime(OdometerOperationResult from, OdometerData to)
-    {
-        to.OdometerStatus = true;
-        to.OdometerValue = from.value;
-    }
-
-    private void UpdateWithRandom(OdometerOperationResult from, OdometerData to)
-    {
-        Debug.Log(from.status);
-                
-        to.OdometerStatus = from.status;
-        if (from.status)
+        set
         {
-            // Простите, но иногда в теле ответа приходит не то, что вы заявляли в ТЗ. Иногда при status = true не приходит odometer, а иногда при status = false у odometer появляется значение. (см скриншоты из Postman)
-            if (from.odometer != 0f)
-            {
-                to.OdometerValue = from.odometer;
-            }
+            if (Math.Abs(value - _odometerValue) < 0.001) return;
+            _odometerValue = value;
+            ChangeOdometerWheels(value);
+        }
+    }
+    public OdometerWheelViewModel[] odometerDigits;
+    private float _odometerValue;
 
-            return;
+    private void ChangeOdometerWheels(float newValue)
+    {
+        var odoInteger = (int) Math.Floor(newValue);
+        var odoFractional = newValue - odoInteger;
+        
+        string integerPartString = odoInteger.ToString();
+        
+        string fractionalPartString = odoFractional.ToString().Substring(2, 2);
+        
+        //loops to be sure we will fill all places
+        for (var i = 4; i >= 0; i--)
+        {
+            try
+            {
+                odometerDigits[i].nextSymbol = integerPartString[i].ToString();
+            }
+            catch(Exception ex)
+            {
+                odometerDigits[i].nextSymbol = "0";
+            }
         }
 
-        to.OdometerValue = 0f;
+        for (var i = 0; i < 2; i++)
+        {
+            int digitPos = odometerDigits.Length - i - 1;
+            try
+            {
+                odometerDigits[digitPos].nextSymbol = fractionalPartString[i].ToString();
+            }
+            catch(Exception ex)
+            {
+                odometerDigits[digitPos].nextSymbol = "0";
+            }
+        }
     }
-    
-    public bool OdometerStatus { get; set; }
-    public float OdometerValue { get; set; }
 
-    public Text odometerTitle;
-    public Text odometerValue;
-        
-    
     void Awake()
     {
-        OdometerUpdater.AddUpdateMethods(ReceiveOdoByRequest, UpdateByRequest);
-        OdometerUpdater.AddUpdateMethods(ReceiveOdoByTime, UpdateByTime);
-        OdometerUpdater.AddUpdateMethods(ReceiveOdoStatusRand, UpdateWithRandom);
-        
         EventBus<OdometerChangedEvent>.Register(this);
     }
-
-    // Start is called before the first frame update
-    void Start()
-    {
-        odometerTitle.text = "ODOMETER: ";
-    }
-
-    // Update is called once per frame
-    void Update()
-    {
-        
-    }
-
+    
     private void OnDestroy()
     {
         EventBus<OdometerChangedEvent>.UnRegister(this);
@@ -81,5 +71,25 @@ public class OdometerViewModel : MonoBehaviour, IEventSubscriber<OdometerChanged
     {
         OdometerStatus = e.odometer.OdometerStatus;
         OdometerValue = e.odometer.OdometerValue;
+    }
+
+    public void GetOdometerValue()
+    {
+        var request = new OdometerWebSocketRequest()
+        {
+            operation = "getCurrentOdometer"
+        };
+
+        odoWebSocketBeacon.SendMessage(JsonUtility.ToJson(request));
+    }
+    
+    public void GetRandomStatus()
+    {
+        var request = new OdometerWebSocketRequest()
+        {
+            operation = "getRandomStatus"
+        };
+
+        odoWebSocketBeacon.SendMessage(JsonUtility.ToJson(request));
     }
 }

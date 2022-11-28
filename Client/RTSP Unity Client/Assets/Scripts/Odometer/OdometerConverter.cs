@@ -3,7 +3,7 @@ using System.Collections.Generic;
 
 namespace RtspTest.Domains.Odometer
 {
-    public class OdometerUpdater
+    public static class OdometerUpdater
     {
         private static Dictionary<string, Action<OdometerOperationResult, OdometerData>> UpdateMethods =
             new()
@@ -27,12 +27,12 @@ namespace RtspTest.Domains.Odometer
 
         public static void AddUpdateMethods(string key, Action<OdometerOperationResult, OdometerData> method)
         {
-            OdometerUpdater.UpdateMethods.Add(key, method);
+            UpdateMethods.Add(key, method);
         }
 
         public static void RemoveUpdateMethods(string key)
         {
-            OdometerUpdater.UpdateMethods.Remove(key);
+            UpdateMethods.Remove(key);
         }
 
     }
