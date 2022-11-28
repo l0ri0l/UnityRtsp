@@ -78,13 +78,13 @@ public class WebSocketWrapper
         _onMessage = onMessage;
         return this;
     }
-    
+
     public WebSocketWrapper AddOnMessage(Action<string, WebSocketWrapper> newOnMessage)
     {
         _onMessage += newOnMessage;
         return this;
     }
-    
+
     public WebSocketWrapper AddOnConnect(Action<WebSocketWrapper> newOnConnect)
     {
         _onConnected += newOnConnect;
@@ -96,7 +96,13 @@ public class WebSocketWrapper
         _onConnected += newOnDisconnect;
         return this;
     }
-    
+
+    public async Task CloseConnection()
+    {
+        await _ws.CloseOutputAsync(WebSocketCloseStatus.NormalClosure, "", _cancellationToken);
+        _ws.Dispose();
+    }
+
     /// <summary>
     ///     Send a message to the WebSocket server.
     /// </summary>
@@ -106,7 +112,12 @@ public class WebSocketWrapper
         SendMessageAsync(message);
     }
 
-    private async void SendMessageAsync(string message)
+    public WebSocketState GetStatus()
+    {
+        return _ws.State;
+    }
+
+private async void SendMessageAsync(string message)
     {
         if (_ws.State != WebSocketState.Open) throw new Exception("Connection is not open.");
 

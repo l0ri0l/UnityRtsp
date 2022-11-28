@@ -1,5 +1,6 @@
 using System.Collections;
 using DG.Tweening;
+using TMPro;
 using UnityEngine;
 
 public class MenuViewModel : MonoBehaviour
@@ -8,6 +9,10 @@ public class MenuViewModel : MonoBehaviour
     public RectTransform ShowHideButtonRect;
     public RectTransform MenuRect;
 
+    public TextMeshProUGUI Address;
+    public TextMeshProUGUI Port;
+    public TextMeshProUGUI File;
+    
     private bool isMenuVisible
     {
         get => MenuButtons.activeInHierarchy;
@@ -42,5 +47,10 @@ public class MenuViewModel : MonoBehaviour
                 MenuButtons.SetActive(false);
             });
         }
+    }
+
+    public void OnAddressAcceptClick()
+    {
+        
     }
 }

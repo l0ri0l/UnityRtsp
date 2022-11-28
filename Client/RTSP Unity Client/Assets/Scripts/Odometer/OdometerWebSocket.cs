@@ -2,9 +2,7 @@ using System;
 using System.Threading.Tasks;
 using Arwel.EventBus;
 using RtspTest.Domains.Odometer;
-using Unity.VisualScripting;
 using UnityEngine;
-using UnityEngine.UIElements;
 
 public class OdometerWebSocketRequest
 {
@@ -70,7 +68,6 @@ public class OdometerWebSocket : MonoBehaviour
 
         onMessage += (message, _) =>
         {
-            Debug.Log("Message!");
             var operationResult = JsonUtility.FromJson<OdometerOperationResult>(message);
             
             OdometerUpdater.UpdateValue(operationResult, _odometerData);
@@ -89,6 +86,7 @@ public class OdometerWebSocket : MonoBehaviour
         };
 
         wsClient.OnConnect(onConnected);
+        wsClient.OnDisconnect(onDisconnected);
         wsClient.OnMessage(onMessage);
 
         wsClient.Connect();
