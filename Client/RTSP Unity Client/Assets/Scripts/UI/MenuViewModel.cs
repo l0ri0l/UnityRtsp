@@ -1,3 +1,4 @@
+using Arwel.EventBus;
 using DG.Tweening;
 using TMPro;
 using Unity.VisualScripting;
@@ -22,7 +23,7 @@ public class MenuViewModel : MonoBehaviour
     public TMP_InputField Address;
     public TMP_InputField Port;
     public TMP_InputField File;
-    public Slider VolumeSlider;
+    public AudioController AudioController;
 
     private bool isMenuVisible
     {
@@ -76,18 +77,13 @@ public class MenuViewModel : MonoBehaviour
         VideoPath.Video = File.text;
     }
 
-    public void OnToggleSound()
+    public void OnToggleSound(bool isEnabled)
     {
-        
+        AudioController.SetSound(isEnabled);
     }
 
-    public void OnToggleMusic()
+    public void OnToggleMusic(bool isEnabled)
     {
-        
-    }
-
-    public void OnVolumeChanged()
-    {
-        Debug.Log(VolumeSlider.value);
+        AudioController.SetMusic(isEnabled);
     }
 }

@@ -66,9 +66,9 @@ public class VLCMinimalPlayback : MonoBehaviour
             if(_mediaPlayer.Media == null)
             {
                 // playing remote media
-                _mediaPlayer.Media = new Media(new Uri("http://commondatastorage.googleapis.com/gtv-videos-bucket/sample/BigBuckBunny.mp4"));
+                _mediaPlayer.Media = new Media(new Uri("rtsp://localhost:8070/bull"));
             }
-
+            
             _mediaPlayer.Play();
         }
     }
@@ -119,5 +119,6 @@ public class VLCMinimalPlayback : MonoBehaviour
                 tex.UpdateExternalTexture(texptr);
             }
         }
+        Debug.Log(_mediaPlayer?.Media?.Statistics.DecodedAudio);
     }
 }

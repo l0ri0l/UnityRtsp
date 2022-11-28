@@ -1858,6 +1858,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   musicMixer: {fileID: 24100000, guid: a7c5480d03193cf4e954452d083173af, type: 2}
+  currentValue: 0
 --- !u!1 &4195283428585968210
 GameObject:
   m_ObjectHideFlags: 0
@@ -2930,7 +2931,7 @@ MonoBehaviour:
       - m_Target: {fileID: 7611131462873274107}
         m_TargetAssemblyTypeName: MenuViewModel, Assembly-CSharp
         m_MethodName: OnToggleMusic
-        m_Mode: 1
+        m_Mode: 0
         m_Arguments:
           m_ObjectArgument: {fileID: 0}
           m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
@@ -3703,7 +3704,7 @@ MonoBehaviour:
       - m_Target: {fileID: 7611131462873274107}
         m_TargetAssemblyTypeName: MenuViewModel, Assembly-CSharp
         m_MethodName: OnToggleSound
-        m_Mode: 1
+        m_Mode: 0
         m_Arguments:
           m_ObjectArgument: {fileID: 0}
           m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
