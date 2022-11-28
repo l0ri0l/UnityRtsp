@@ -38,6 +38,7 @@ namespace WebSocketBroadcast
                     wssv.Stop();
                     await Task.Delay(10000);
                     Console.WriteLine("Restarted");
+                    wssv.AddWebSocketService<CheckConnect>("/Echo");
                     wssv.Start();
                 }
                 
@@ -54,6 +55,7 @@ namespace WebSocketBroadcast
 
                 if (Console.ReadKey().Key == ConsoleKey.L)
                 {
+                    wssv.AddWebSocketService<CheckConnect>("/Echo");
                     wssv.Start();
                 }
             }

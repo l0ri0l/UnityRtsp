@@ -7,6 +7,8 @@ using UnityEngine.UI;
 
 public class VideoSocketViewModel : MonoBehaviour, IEventSubscriber<WebSocketVideoConnectionEvent>, IEventSubscriber<ChangeVideoAddress>
 {
+    private string _address;
+
     public WebSocketVideo webSocket;
     public Image Lamp;
     public TextMeshProUGUI Address;
@@ -25,6 +27,10 @@ public class VideoSocketViewModel : MonoBehaviour, IEventSubscriber<WebSocketVid
     void Update()
     {
         onConnectionChanged?.Invoke();
+        if (Address.text != _address)
+        {
+            Address.SetText(_address);
+        }
     }
 
     private void OnDestroy()
@@ -67,9 +73,6 @@ public class VideoSocketViewModel : MonoBehaviour, IEventSubscriber<WebSocketVid
     public void OnEvent(ChangeVideoAddress e)
     {
         var path = e.path;
-        Address.SetText(path);
-
-        webSocket.StopConnection();
-        webSocket.StartConnection(path);
+        _address = (path);
     }
 }

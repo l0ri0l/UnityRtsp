@@ -1,4 +1,5 @@
 using System;
+using System.Collections;
 using Arwel.EventBus;
 using UnityEngine;
 using System.IO;
@@ -17,18 +18,18 @@ public class WebSocketVideoConfig
     }
 }
 
-public class WebSocketVideo : MonoBehaviour, IEventSubscriber<WebSocketVideoConnectionEvent>
+public class WebSocketVideo : MonoBehaviour
 {
     private const string ConfigFilePath = "Assets/Resources/config.txt";
 
     private static string _connectionURL = "";
-    
+
     private bool _isUserDisconnect = false;
 
     private WebSocketVideoConfig _serverConnectionConfig;
 
     private WebSocketWrapper _wsClient;
-    
+
     private Action<WebSocketWrapper> _onConnected;
     private Action<WebSocketWrapper> _onDisconnected;
 
@@ -41,7 +42,7 @@ public class WebSocketVideo : MonoBehaviour, IEventSubscriber<WebSocketVideoConn
         _serverConnectionConfig = JsonUtility.FromJson<WebSocketVideoConfig>(jsonConfig);
 
         BuildAddress(_serverConnectionConfig.address, _serverConnectionConfig.port);
-            
+
         StartConnection(_connectionURL);
     }
 
@@ -55,7 +56,7 @@ public class WebSocketVideo : MonoBehaviour, IEventSubscriber<WebSocketVideoConn
     public void StartConnection(string path)
     {
         _wsClient = WebSocketWrapper.Create(path);
-        
+
         _onConnected += (_) =>
         {
             EventBus<WebSocketVideoConnectionEvent>.Raise(new WebSocketVideoConnectionEvent(true));
@@ -64,15 +65,16 @@ public class WebSocketVideo : MonoBehaviour, IEventSubscriber<WebSocketVideoConn
 
         _onDisconnected += async (_) =>
         {
+            Debug.Log("Try to reconnect 1");
             EventBus<WebSocketVideoConnectionEvent>.Raise(new WebSocketVideoConnectionEvent(false));
             EventBus<ChangeVideoAddress>.Raise(new ChangeVideoAddress(_connectionURL));
             if (!_isUserDisconnect)
             {
-                while (_wsClient.GetStatus() != WebSocketState.Open)
-                {
+                while (_wsClient.GetStatus() != WebSocketState.Open || _wsClient.GetStatus() != WebSocketState.Connecting)
+                {   
+                    //try to reconnect every 5 seconds outside main thread
                     await Task.Delay(5000);
-                    BuildAddress(_serverConnectionConfig.address, _serverConnectionConfig.port);
-                    StartConnection(_connectionURL);
+                    StartConnection(_connectionURL);    
                 }
             }
         };
@@ -83,13 +85,8 @@ public class WebSocketVideo : MonoBehaviour, IEventSubscriber<WebSocketVideoConn
         _wsClient.Connect();
     }
 
-    public static void BuildAddress(string address, string port, string service ="/Echo")
+    public static void BuildAddress(string address, string port, string service = "/Echo")
     {
         _connectionURL = $"ws://{address}:{port}{service}";
-    }
-
-    public void OnEvent(WebSocketVideoConnectionEvent e)
-    {
-        throw new NotImplementedException();
     }
 }
