@@ -40,6 +40,9 @@ public class WebSocketVideo : MonoBehaviour
         reader.Close();
 
         _serverConnectionConfig = JsonUtility.FromJson<WebSocketVideoConfig>(jsonConfig);
+        
+        VideoPath.Server = _serverConnectionConfig.address;
+        VideoPath.Port = _serverConnectionConfig.port;
 
         BuildAddress(_serverConnectionConfig.address, _serverConnectionConfig.port);
 

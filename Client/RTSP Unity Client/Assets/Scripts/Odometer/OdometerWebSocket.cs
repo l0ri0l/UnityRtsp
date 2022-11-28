@@ -1,4 +1,5 @@
 using System;
+using System.Net.WebSockets;
 using System.Threading.Tasks;
 using Arwel.EventBus;
 using RtspTest.Domains.Odometer;
@@ -14,6 +15,8 @@ public class OdometerWebSocket : MonoBehaviour
     private const string ReceiveOdoByRequest = "currentOdometer";
     private const string ReceiveOdoByTime = "odometer_val";
     private const string ReceiveOdoStatusRand = "randomStatus";
+
+    private bool _isDisconnectedByUser;
 
     private void UpdateByRequest(OdometerOperationResult from, OdometerData to)
     {
@@ -49,7 +52,7 @@ public class OdometerWebSocket : MonoBehaviour
         to.UpdateValues(nextStatus, nextOdometer);
     }
     
-    private const string connection = "ws://185.246.65.199:9090/ws";
+    private const string ConnectionUrl = "ws://185.246.65.199:9090/ws";
 
     private Action<string, WebSocketWrapper> onMessage;
     private Action<WebSocketWrapper> onConnected;
@@ -63,8 +66,18 @@ public class OdometerWebSocket : MonoBehaviour
         OdometerUpdater.AddUpdateMethods(ReceiveOdoByRequest, UpdateByRequest);
         OdometerUpdater.AddUpdateMethods(ReceiveOdoByTime, UpdateByTime);
         OdometerUpdater.AddUpdateMethods(ReceiveOdoStatusRand, UpdateWithRandom);
-        
-        wsClient = WebSocketWrapper.Create(connection);
+
+        StartConnection(ConnectionUrl);
+    }
+    
+    public void SendMessage(string messageToSend)
+    { 
+        wsClient.SendMessage(messageToSend);
+    }
+
+    public void StartConnection(string path)
+    {
+        wsClient = WebSocketWrapper.Create(ConnectionUrl);
 
         onMessage += (message, _) =>
         {
@@ -81,8 +94,15 @@ public class OdometerWebSocket : MonoBehaviour
         onDisconnected += async (_) =>
         {
             EventBus<OdometerConnectionEvent>.Raise(new OdometerConnectionEvent(false));
-            await Task.Delay(10000);
-            wsClient.Connect();
+            if (!_isDisconnectedByUser)
+            {
+                while (wsClient.GetStatus() != WebSocketState.Open || wsClient.GetStatus() != WebSocketState.Connecting)
+                {   
+                    //try to reconnect every 5 seconds outside main thread
+                    await Task.Delay(5000);
+                    StartConnection(ConnectionUrl);
+                }
+            }
         };
 
         wsClient.OnConnect(onConnected);
@@ -90,10 +110,5 @@ public class OdometerWebSocket : MonoBehaviour
         wsClient.OnMessage(onMessage);
 
         wsClient.Connect();
-    }
-    
-    public void SendMessage(string messageToSend)
-    { 
-        wsClient.SendMessage(messageToSend);
     }
 }

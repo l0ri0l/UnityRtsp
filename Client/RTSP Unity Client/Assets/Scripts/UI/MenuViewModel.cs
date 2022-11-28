@@ -1,7 +1,15 @@
-using System.Collections;
 using DG.Tweening;
 using TMPro;
+using Unity.VisualScripting;
 using UnityEngine;
+using UnityEngine.UI;
+
+public static class VideoPath
+{
+    public static string Server;
+    public static string Port;
+    public static string Video;
+}
 
 public class MenuViewModel : MonoBehaviour
 {
@@ -9,25 +17,26 @@ public class MenuViewModel : MonoBehaviour
     public RectTransform ShowHideButtonRect;
     public RectTransform MenuRect;
 
-    public TextMeshProUGUI Address;
-    public TextMeshProUGUI Port;
-    public TextMeshProUGUI File;
-    
+    public Toggle SoundToggler;
+    public Toggle MusicToggler;
+    public TMP_InputField Address;
+    public TMP_InputField Port;
+    public TMP_InputField File;
+    public Slider VolumeSlider;
+
     private bool isMenuVisible
     {
         get => MenuButtons.activeInHierarchy;
     }
-    
-    // Start is called before the first frame update
+
     void Start()
     {
+        Address.SetTextWithoutNotify(VideoPath.Server);
+        Port.SetTextWithoutNotify(VideoPath.Port);
+        File.SetTextWithoutNotify(VideoPath.Video);
         
-    }
-
-    // Update is called once per frame
-    void Update()
-    {
-        
+        Debug.Log(Address.text);
+        Debug.Log(VideoPath.Server);
     }
 
     public void OnShowHideButtonClicked()
@@ -49,8 +58,36 @@ public class MenuViewModel : MonoBehaviour
         }
     }
 
-    public void OnAddressAcceptClick()
+    public void OnServerAddressSaveClicked()
+    {
+        VideoPath.Server = Address.text;
+        
+        Debug.Log(Address.text);
+        Debug.Log(VideoPath.Server);
+    }
+    
+    public void OnPortSaveClicked()
+    {
+        VideoPath.Port = Port.text;
+    }
+
+    public void OnFilepathSaveClicked()
+    {
+        VideoPath.Video = File.text;
+    }
+
+    public void OnToggleSound()
     {
         
+    }
+
+    public void OnToggleMusic()
+    {
+        
+    }
+
+    public void OnVolumeChanged()
+    {
+        Debug.Log(VolumeSlider.value);
     }
 }
