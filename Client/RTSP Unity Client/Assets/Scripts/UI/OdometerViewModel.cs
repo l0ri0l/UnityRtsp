@@ -35,36 +35,23 @@ namespace Arwel.Scripts.UI
 
         private void ChangeOdometerWheels(float newValue)
         {
-            var odoInteger = (int) Math.Floor(newValue);
-            var odoFractional = newValue - odoInteger;
+            //take 5 of integer digits
+            newValue %= 100000;
+            string newValueString = $"{newValue:F2}";
+            
+            //removeComma
+            newValueString = newValueString.Replace(",", "");
 
-            string integerPartString = odoInteger.ToString();
-
-            string fractionalPartString = (odoFractional > 0) ? odoFractional.ToString().Substring(2, 2) : "00";
-
-            //loops to be sure we will fill all places
-            for (var i = 4; i >= 0; i--)
+            for (int i = 0; i < odometerDigits.Length; i++)
             {
                 try
                 {
-                    odometerDigits[i].NextSymbol = integerPartString[i].ToString();
+                    odometerDigits[i].NextSymbol = newValueString[i].ToString();
+
                 }
                 catch (Exception ex)
                 {
                     odometerDigits[i].NextSymbol = "0";
-                }
-            }
-
-            for (var i = 0; i < 2; i++)
-            {
-                int digitPos = odometerDigits.Length - i - 1;
-                try
-                {
-                    odometerDigits[digitPos].NextSymbol = fractionalPartString[i].ToString();
-                }
-                catch (Exception ex)
-                {
-                    odometerDigits[digitPos].NextSymbol = "0";
                 }
             }
         }
