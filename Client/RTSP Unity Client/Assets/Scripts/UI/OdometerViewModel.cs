@@ -37,7 +37,7 @@ namespace Arwel.Scripts.UI
         {
             //take 5 of integer digits
             newValue %= 100000;
-            string newValueString = $"{newValue:F2}";
+            string newValueString = $"{newValue:00000.00}";
             
             //removeComma
             newValueString = newValueString.Replace(",", "");
