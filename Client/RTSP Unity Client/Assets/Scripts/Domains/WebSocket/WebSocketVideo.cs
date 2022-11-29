@@ -26,7 +26,7 @@ namespace Arwel.Scripts.WebSocket
 
         private static string _connectionURL = "";
 
-        private bool _isUserDisconnect = false;
+        [NonSerialized] public bool IsUserDisconnect = false;
 
         private WebSocketVideoConfig _serverConnectionConfig;
 
@@ -45,45 +45,52 @@ namespace Arwel.Scripts.WebSocket
 
             VideoPath.Server = _serverConnectionConfig.address;
             VideoPath.Port = _serverConnectionConfig.port;
+        }
 
-            BuildAddress(_serverConnectionConfig.address, _serverConnectionConfig.port);
-
-            StartConnection(_connectionURL);
+        void Start()
+        {
+            EventBus<ChangeVideoAddress>.Raise(new ChangeVideoAddress(VideoPath.Server, VideoPath.Port, ""));
         }
 
         public async Task StopConnection()
         {
-            _isUserDisconnect = true;
-            await _wsClient.CloseConnection();
-            _isUserDisconnect = false;
+            if (_wsClient != null)
+            {
+                await _wsClient.CloseConnection();
+            }
         }
 
-        public void StartConnection(string path)
+        public void StartConnection()
         {
-            _wsClient = WebSocketWrapper.Create(path);
+            Debug.Log("Try connect");
+            _wsClient = WebSocketWrapper.Create(_connectionURL);
 
             _onConnected += (_) =>
             {
                 EventBus<WebSocketVideoConnectionEvent>.Raise(new WebSocketVideoConnectionEvent(true));
-                EventBus<ChangeVideoAddress>.Raise(new ChangeVideoAddress(_connectionURL));
             };
 
-            _onDisconnected += async (_) =>
+            async void OnDisconnected(WebSocketWrapper _)
             {
-                Debug.Log("Try to reconnect 1");
+                Debug.Log(_connectionURL);
                 EventBus<WebSocketVideoConnectionEvent>.Raise(new WebSocketVideoConnectionEvent(false));
-                EventBus<ChangeVideoAddress>.Raise(new ChangeVideoAddress(_connectionURL));
-                if (!_isUserDisconnect)
+                
+                if (IsUserDisconnect)
                 {
-                    while (_wsClient.GetStatus() != WebSocketState.Open ||
-                           _wsClient.GetStatus() != WebSocketState.Connecting)
-                    {
-                        //try to reconnect every 5 seconds outside main thread
-                        await Task.Delay(5000);
-                        StartConnection(_connectionURL);
-                    }
+                    IsUserDisconnect = false;
+                    return;
                 }
-            };
+                
+                while (_wsClient.GetStatus() != WebSocketState.Open || _wsClient.GetStatus() != WebSocketState.Connecting)
+                {
+                    Debug.Log(_wsClient.GetStatus());
+                    //try to reconnect every 5 seconds outside main thread
+                    await Task.Delay(5000);
+                    StartConnection();
+                }
+            }
+
+            _onDisconnected += OnDisconnected;
 
             _wsClient.OnConnect(_onConnected);
             _wsClient.OnDisconnect(_onDisconnected);
@@ -91,9 +98,10 @@ namespace Arwel.Scripts.WebSocket
             _wsClient.Connect();
         }
 
-        public static void BuildAddress(string address, string port, string service = "/Echo")
+        public static void BuildAddress(string address, string port)
         {
-            _connectionURL = $"ws://{address}:{port}{service}";
+            Debug.Log("builded");
+            _connectionURL = $"ws://{address}:{port}/Echo";
         }
     }
 }

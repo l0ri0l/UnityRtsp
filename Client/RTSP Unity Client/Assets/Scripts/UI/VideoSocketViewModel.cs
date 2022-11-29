@@ -1,4 +1,5 @@
 using System;
+using System.Threading.Tasks;
 using Arwel.Scripts.Domains.EventBus;
 using Arwel.Scripts.WebSocket;
 using DG.Tweening;
@@ -31,10 +32,6 @@ namespace Arwel.Scripts.UI
         void Update()
         {
             onConnectionChanged?.Invoke();
-            if (Address.text != _address)
-            {
-                Address.SetText(_address);
-            }
         }
 
         private void OnDestroy()
@@ -51,9 +48,11 @@ namespace Arwel.Scripts.UI
                 onConnectionChanged = () =>
                 {
                     Status.SetText("CONNECTED");
+                    Address.SetText($"ws://{VideoPath.Server}:{VideoPath.Port}/Echo");
                     Lamp.DOColor(Color.green, 2f).OnComplete(
                         () => { onConnectionChanged = null; }
                     );
+                    
                 };
             }
             else
@@ -61,6 +60,7 @@ namespace Arwel.Scripts.UI
                 onConnectionChanged = () =>
                 {
                     Status.SetText("DISCONNECTED");
+                    Address.SetText($"ws://{VideoPath.Server}:{VideoPath.Port}/Echo");
                     Lamp.DOColor(Color.red, 2f).OnComplete(
                         () => { onConnectionChanged = null; }
                     );
@@ -68,10 +68,19 @@ namespace Arwel.Scripts.UI
             }
         }
 
-        public void OnEvent(ChangeVideoAddress e)
+        public async void OnEvent(ChangeVideoAddress e)
         {
-            var path = e.path;
+            var path = $"ws://{e.Server}:{e.Port}/Echo";
             _address = (path);
+            Debug.Log("building");
+            await UpdateConnection(e.Server, e.Port);
+        }
+
+        private async Task UpdateConnection(string server, string port)
+        {
+            await webSocket.StopConnection();
+            WebSocketVideo.BuildAddress(server, port);
+            webSocket.StartConnection();
         }
     }
 }

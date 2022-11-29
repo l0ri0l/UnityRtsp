@@ -3,6 +3,7 @@ using System.Net.WebSockets;
 using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
+using UnityEngine;
 
 namespace Arwel.Scripts.WebSocket
 {
@@ -101,8 +102,18 @@ namespace Arwel.Scripts.WebSocket
 
         public async Task CloseConnection()
         {
-            await _ws.CloseOutputAsync(WebSocketCloseStatus.NormalClosure, "", _cancellationToken);
-            _ws.Dispose();
+            if(_ws != null)
+            {
+                try
+                {
+                    await _ws.CloseOutputAsync(WebSocketCloseStatus.NormalClosure, "", _cancellationToken);
+                    _ws.Dispose();
+                }
+                catch
+                {
+                    _ws.Dispose();
+                }
+            }
         }
 
         /// <summary>

@@ -12,11 +12,15 @@ namespace Arwel.Scripts.Domains.EventBus
 
     public class ChangeVideoAddress : IEvent
     {
-        public string path;
+        public string Server;
+        public string Port;
+        public string Video;
 
-        public ChangeVideoAddress(string path)
+        public ChangeVideoAddress(string server, string port, string video)
         {
-            this.path = path;
+            Server = server;
+            Port = port;
+            Video = video;
         }
     }
 }

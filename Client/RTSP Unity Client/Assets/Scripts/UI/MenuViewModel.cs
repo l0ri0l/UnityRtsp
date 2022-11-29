@@ -1,4 +1,5 @@
 using Arwel.Scripts.Domains;
+using Arwel.Scripts.Domains.EventBus;
 using DG.Tweening;
 using TMPro;
 using UnityEngine;
@@ -61,18 +62,21 @@ namespace Arwel.Scripts.UI
         {
             VideoPath.Server = Address.text;
 
-            Debug.Log(Address.text);
-            Debug.Log(VideoPath.Server);
+            EventBus<ChangeVideoAddress>.Raise(new ChangeVideoAddress(VideoPath.Server, VideoPath.Port, VideoPath.Video));
         }
 
         public void OnPortSaveClicked()
         {
             VideoPath.Port = Port.text;
+
+            EventBus<ChangeVideoAddress>.Raise(new ChangeVideoAddress(VideoPath.Server, VideoPath.Port, VideoPath.Video));
         }
 
         public void OnFilepathSaveClicked()
         {
             VideoPath.Video = File.text;
+            
+            EventBus<ChangeVideoAddress>.Raise(new ChangeVideoAddress(VideoPath.Server, VideoPath.Port, VideoPath.Video));
         }
 
         public void OnToggleSound(bool isEnabled)
